@@ -1,56 +1,39 @@
 # mockup-to-game-ui
 
-`mockup-to-game-ui` 是一个 Codex Skill，用于把游戏 UI 示意图、GPT 图像参考图或 AI 概念图，转成可接入项目的分层 PNG 素材、素材清单和可编辑 UI 场景。
+这是一个用于 Codex 的 Skill 仓库。
 
-它的目标不是把整张示意图裁成一张运行时背景，而是按实际 UI 层级重新生成、切分和接入素材，让背景、面板、按钮、卡片、装饰、文本、图标和动态数据都能在 Godot、Unity 或 HTML UI 中继续编辑和绑定。
+## 安装
 
-## 适用场景
+把这个仓库克隆到 Codex 的 skills 目录：
 
-- 根据 UI mockup 重建游戏菜单、HUD、弹窗、卡牌界面或道具面板。
-- 用 GPT 图像生成的参考图，产出可用于运行时的透明 PNG 分层素材。
-- 把卡片、按钮、边框、背景、装饰物等拆成独立资源，避免烘焙在同一张图里。
-- 修复 mockup 接入后出现的层级错乱、文字被烘死、图标不可替换、z-order 不正确等问题。
-- 将生成素材接入 Godot、Unity 或 HTML UI，并保留可编辑的场景结构。
+```powershell
+git clone https://github.com/Fater666/mockup-to-game-ui.git "$env:USERPROFILE\.codex\skills\mockup-to-game-ui"
+```
 
-## 核心原则
+如果你已经下载了这个仓库，也可以直接把整个 `mockup-to-game-ui` 文件夹复制到：
 
-- 示意图只作为风格和布局参考，不直接作为运行时底图。
-- 位图素材必须通过 `gpt-image-2` / Responses `image_generation` 生成。
-- 不使用 SVG 代替游戏 UI 素材。
-- 文字、数值、图标和动态内容通常由目标项目运行时绑定，不烘焙进素材。
-- 不同层级、不同交互区域、不同可替换元素必须拆成独立 PNG。
-- 保留原始生成图到 `asset_sources/` 或 `art_sources/`，运行时资源放入项目既有 `assets/` 目录。
+```text
+%USERPROFILE%\.codex\skills\
+```
 
-## 文件结构
+## 使用
 
-- `SKILL.md`：Skill 主说明，包含完整工作流和约束。
-- `references/prompt-patterns.md`：素材表生成提示词模板。
-- `agents/openai.yaml`：Codex Skill 接口元数据。
-
-## 使用方法
-
-把本目录安装或复制到 Codex skills 目录后，在 Codex 中调用：
+在 Codex 对话里输入：
 
 ```text
 $mockup-to-game-ui
 ```
 
-调用时请同时提供目标项目、UI 示意图或参考图，以及希望接入的引擎或页面位置。
+然后告诉 Codex：
 
-## 工作流摘要
+- 目标项目路径
+- UI 示意图或参考图路径
+- 想接入到哪个引擎、场景、页面或目录
+- 输出文件希望放在哪里
 
-1. 读取目标工程和 UI 参考图，确认运行时资源目录、场景结构和动态绑定内容。
-2. 按背景、面板、按钮、卡片、装饰、图标框等职责拆分素材清单。
-3. 使用 `gpt-image-2` 生成分层素材表，避免把多个层级混进同一格。
-4. 检查素材表是否干净、透明边缘是否正确、是否出现文字或图标污染。
-5. 切分为透明 PNG，并按层级语义命名。
-6. 接入可编辑 UI 场景，用图片节点承载视觉层，用 Label/Button 等节点承载动态内容和交互。
-7. 生成临时预览并验证层级、透明度、资源路径和运行效果，检查后删除临时调试图。
+示例：
 
-## 注意事项
-
-- 不要把整张 mockup 裁成背景图，否则文本、图标和卡片内容会失去可编辑性。
-- 不要固定要求 4x3 素材表，素材表尺寸应根据资源数量和层级决定。
-- 不要把卡片底板、按钮、标题牌、图标框和装饰物合并到同一个 PNG。
-- 清理 chroma-key 背景时要避免误删绿色植物、绿色夹子或其他绿色主体资产。
-- 接入完成后应运行 `git diff --check`，并只提交与本 skill 相关的改动。
+```text
+$mockup-to-game-ui
+请把 C:\Projects\Game\mockups\shop.png 接入到 C:\Projects\Game 的商店界面，目标是 Godot 4。
+```
